@@ -3,6 +3,7 @@ import json
 from db import db
 from flask import Flask
 from flask import request
+from flask import Flask, session
 
 from db import Course
 from db import User
@@ -45,15 +46,33 @@ def get_courses():
     return success_response({"courses": courses})
 
 
-@app.route("/api/courses/<int:user_id>/<int:course_id>/enroll/", methods=["POST"])
+@app.route("/api/courses/", methods=["POST"])
+def create_course():
+    """
+    Endpoint for creating a new course.
+    """
+    body = json.loads(request.data)
+    if body.get("code") is None:
+        return failure_response("Please insert the code", 400)
+    if body.get("name") is None:
+        return failure_response("Please insert the name", 400)
+    new_course = Course(code=body.get("code"), name=body.get("name"))
+    db.session.add(new_course)
+    db.session.commit()
+    return success_response(new_course.serialize(), 201)
+
+
+@app.route("/api/courses/<int:user_id>/<course_id>/enroll/", methods=["POST"])
 def enroll_in_course(user_id, course_id):
     """
     Endpoint for enrolling a user into a course by user id and course id
     """
-    user = User.query.filter_by(id = user_id).first()
+    course = Course.query.filter_by(course_id = course_id).first()
+    if course is None:
+        return failure_response("Course not found!")
+    user = User.query.filter_by(user_id = user_id).first()
     if user is None:
         return failure_response("User not found!")
-    course = Course.query.filter_by(id = course_id).first()
     if user.is_ta:
         course.tas.append(user)
     else:
@@ -62,7 +81,7 @@ def enroll_in_course(user_id, course_id):
     return success_response(new_course.serialize(), 201)
 
 
-@app.route("/api/courses/", methods=["POST"])
+@app.route("/api/course/", methods=["POST"])
 def get_course():
     """
     Endpoint for getting a course by code.
@@ -81,10 +100,10 @@ def delete_course(course_id, user_id):
     """
     Endpoint for deleting a course by id and removing corresponding TAs/students.
     """
-    course = Course.query.filter_by(id = course_id).first()
+    course = Course.query.filter_by(course_id = course_id).first()
     if course is None:
         return failure_response("Course not found!")
-    user = User.query.filter_by(id = user_id).first()
+    user = User.query.filter_by(user_id = user_id).first()
     if user is None:
         return failure_response("User not found!")
     if user.is_ta:

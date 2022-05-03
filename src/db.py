@@ -12,14 +12,14 @@ db = SQLAlchemy()
 
 student_association_table = db.Table(
     "student_association",
-    db.Column("course_id", db.Integer, db.ForeignKey("courses.id")),
-    db.Column("user_id", db.Integer, db.ForeignKey("users.id"))
+    db.Column("course_id", db.Integer, db.ForeignKey("courses.course_id")),
+    db.Column("user_id", db.Integer, db.ForeignKey("users.user_id"))
 )
 
 ta_association_table = db.Table(
     "ta_association",
-    db.Column("course_id", db.Integer, db.ForeignKey("courses.id")),
-    db.Column("user_id", db.Integer, db.ForeignKey("users.id"))
+    db.Column("course_id", db.Integer, db.ForeignKey("courses.course_id")),
+    db.Column("user_id", db.Integer, db.ForeignKey("users.user_id"))
 )
 
 # database model classes
@@ -27,7 +27,7 @@ ta_association_table = db.Table(
 
 class User(db.Model):
     __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    user_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     name = db.Column(db.String, nullable = False)
     netid = db.Column(db.String, nullable = False)
     is_ta = db.Column(db.Boolean, nullable = False) #true is the user is a ta, false otherwise
@@ -63,7 +63,7 @@ class User(db.Model):
         Serialize User object
         """
         return {
-            "id": self.id,
+            "id": self.user_id,
             "name": self.name,
             "netid": self.netid,
             "student_courses": [c.simple_serialize() for c in self.student_courses],
@@ -75,7 +75,7 @@ class User(db.Model):
         Simply serialize User object
         """
         return {
-            "id": self.id,
+            "id": self.user_id,
             "name": self.name,
             "netid": self.netid,
         }
@@ -124,7 +124,7 @@ class Course(db.Model):
     Courses model
     """
     __tablename__ = "courses"
-    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    course_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     code = db.Column(db.String, nullable = False)    #The number following the subject, etc: CS2800
     name = db.Column(db.String, nullable = False)     #The course tite, etc: Discrete Structures
     
@@ -146,7 +146,7 @@ class Course(db.Model):
         Serialize Course object
         """
         return {
-            "id": self.id,
+            "id": self.course_id,
             "code": self.code,
             "name": self.name,
             "office_hours": [a.simple_serialize() for a in self.office_hours],
@@ -159,7 +159,7 @@ class Course(db.Model):
         Simply serialize Course object
         """
         return {
-            "id": self.id,
+            "id": self.course_id,
             "code": self.code,
             "name": self.name,
         }
@@ -172,8 +172,8 @@ class OfficeHours(db.Model):
     time = db.Column(db.Integer, nullable = False)
     location = db.Column(db.String, nullable = False)
     
-    course_id = db.Column(db.Integer, db.ForeignKey("courses.id"), nullable = False)  # the course the OH is for
-    ta_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable = False)  #the ta creating the OH
+    course_id = db.Column(db.Integer, db.ForeignKey("courses.course_id"), nullable = False)  # the course the OH is for
+    ta_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable = False)  #the ta creating the OH
    
     #relationships:
     course = db.relationship("Course", back_populates= "office_hours")

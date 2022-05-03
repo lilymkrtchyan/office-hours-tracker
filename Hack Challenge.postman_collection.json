@@ -6,89 +6,212 @@
 	},
 	"item": [
 		{
-			"name": "get all courses",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:5000/api/courses/",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"courses",
-						""
-					]
+			"name": "Course Requests",
+			"item": [
+				{
+					"name": "get all courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/courses/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"courses",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "enroll user into course by ids",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/courses/0/0/enroll/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"courses",
+								"0",
+								"0",
+								"enroll",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get course by course code",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/courses/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"courses",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete course by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/courses/0/0/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"courses",
+								"0",
+								"0",
+								""
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "enroll user into course by ids",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "localhost:5000/api/courses/0/0/enroll/",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"courses",
-						"0",
-						"0",
-						"enroll",
-						""
-					]
+			"name": "Authorization Requests",
+			"item": [
+				{
+					"name": "register account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"ep439@cornell.edu\",\r\n    \"password\": \"helloworld!\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/register/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"ep439@cornell.edu\",\r\n    \"password\": \"helloworld!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/login/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update session",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{update_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/session/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"session",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{session_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/logout/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"logout",
+								""
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "get course by course code",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "localhost:5000/api/courses/",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"courses",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "delete course by id",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "localhost:5000/api/courses/0/0/",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"courses",
-						"0",
-						"0",
-						""
-					]
-				}
-			},
-			"response": []
+			]
 		}
 	]
 }

@@ -1,4 +1,4 @@
-# from flask_sqlalchemy import SQLAlchemy
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.types import Boolean, String
 import datetime
@@ -96,8 +96,7 @@ class User(db.Model):
         3. Creates a new update token
         """
         self.session_token = self._urlsafe_base_64()
-        #define what the session experiation time is
-        self.session_expiration = datetime.datetime.now() + datetime.timedelta(days=1)
+        self.session_expiration = datetime.datetime.now() + datetime.timedelta(days=1)   #session expires after 1 day
         self.update_token = self._urlsafe_base_64()
 
     def verify_password(self, password):

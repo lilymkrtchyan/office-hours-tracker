@@ -3,9 +3,12 @@ import json
 from db import db
 from flask import Flask
 from flask import request
+
 from db import Course
 from db import User
 from db import OfficeHours
+import users_dao
+import datetime
 
 app = Flask(__name__)
 db_filename = "cms.db"
@@ -91,6 +94,119 @@ def delete_course(course_id, user_id):
     db.session.delete(course)
     db.session.commit()
     return success_response(course.serialize())
+
+#-----AUTHORIZATION ROUTES-----------------------------------------------------------------------------------
+
+def extract_token(request):
+    """
+    Helper function that extracts the token from the header of a request
+    """
+    auth_header = request.headers.get("Authorization")  
+
+    if auth_header is None:
+        return False, json.dumps({"Missing authorization header"})
+
+    #gets token
+    bearer_token = auth_header.replace("Bearer", "").strip()
+
+    return True, bearer_token
+
+
+@app.route("/register/", methods=["POST"])
+def register_account():
+    """
+    Endpoint for registering a new user
+    """
+    body = json.loads(request.data)
+    email = body.get("email")
+    password = body.get("password")
+
+    if email is None or password is None:
+        return failure_response("Missing email or password")
+    
+    was_successful, user = users_dao.create_user(email,password)
+
+    if not was_successful:
+        return failure_response("User already exists")
+
+    return success_response(
+        {
+            "session_token": user.session_token,
+            "session_expiration": str(user.session_expiration),
+            "update_token": user.update_token               
+        }, 201
+    )
+
+
+@app.route("/login/", methods=["POST"])
+def login():
+    """
+    Endpoint for logging in a user
+    """
+    body = json.loads(request.data)
+    email = body.get("email")
+    password = body.get("password") 
+
+    if email is None or password is None:
+        return failure_response("Missing email or password", 400)
+
+    was_successful, user = users_dao.verify_credentials(email, password)
+
+    if not was_successful:
+        return failure_response("Incorrect username or password", 401)
+
+    return success_response(
+        {
+            "session_token": user.session_token,
+            "session_expiration": str(user.session_expiration),
+            "update_token": user.update_token
+        }
+
+    )
+
+
+@app.route("/session/", methods=["POST"])
+def update_session():
+    """
+    Endpoint for updating a user's session
+    """
+    was_successful, update_token = extract_token(request)
+
+    if not was_successful:
+        return update_token
+
+    try:
+        user = users_dao.renew_session(update_token)
+    except Exception as e:
+        return failure_response(f"Invalid update token: {str(e)}") #f allows you to print a variable
+
+    return success_response(
+        {
+            "session_token": user.session_token,
+            "session_expiration": str(user.session_expiration),
+            "update_token": user.update_token
+        }
+    )
+
+@app.route("/logout/",methods=["POST"])
+def logout():
+    was_successful, session_token = extract_token(request)
+
+    if not was_successful:
+        return session_token
+    
+    user = users_dao.get_user_by_session_token(session_token)
+
+    if not user or not user.verify_session_token(session_token):
+        return failure_response("Invalid session token")
+
+    user.session_expiration = datetime.datetime.now()
+
+    db.session.commit()
+
+    return success_response({
+        "message": "You have successfully logged out!"
+    })
 
 
 if __name__ == "__main__":

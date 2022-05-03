@@ -1,4 +1,6 @@
+# from flask_sqlalchemy import SQLAlchemy
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.types import Boolean, String
 import datetime
 import hashlib
 import os
@@ -28,7 +30,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     name = db.Column(db.String, nullable = False)
     netid = db.Column(db.String, nullable = False)
-    is_ta = db.Column(db.boolean, nullable = False) #true is the user is a ta, false otherwise
+    is_ta = db.Column(db.Boolean, nullable = False) #true is the user is a ta, false otherwise
    
     #relationships:
     student_courses = db.relationship("Course", secondary= student_association_table, back_populates="students")
@@ -124,9 +126,9 @@ class Course(db.Model):
     """
     __tablename__ = "courses"
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    subject = db.Column(db.String, nullable = False)  #CS, MATH, PHYS, INFO, etc
-    code = db.Column(db.String, nullable = False)    #The number following the subject, etc: 2800 in "CS 2800"
+    code = db.Column(db.String, nullable = False)    #The number following the subject, etc: CS2800
     name = db.Column(db.String, nullable = False)     #The course tite, etc: Discrete Structures
+    
 
     #relationships
     office_hours = db.relationship("OfficeHours", cascade="delete")
@@ -137,7 +139,6 @@ class Course(db.Model):
         """
         initalize tasks object/entry
         """
-        self.subject = kwargs.get("subject", "")
         self.code = kwargs.get("code", "")
         self.name = kwargs.get("name", "")
 
@@ -160,7 +161,6 @@ class Course(db.Model):
         """
         return {
             "id": self.id,
-            "subject": self.subject,
             "code": self.code,
             "name": self.name,
         }
@@ -174,7 +174,7 @@ class OfficeHours(db.Model):
     location = db.Column(db.String, nullable = False)
     
     course_id = db.Column(db.Integer, db.ForeignKey("courses.id"), nullable = False)  # the course the OH is for
-    ta_id = db.Column(db.Integer, db.ForeginKey("users.id"), nullable = False)  #the ta creating the OH
+    ta_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable = False)  #the ta creating the OH
    
     #relationships:
     course = db.relationship("Course", back_populates= "office_hours")

@@ -27,6 +27,7 @@ def success_response(data, code=200):
 def failure_response(message, code=404):
     return json.dumps({"error": message}), code
 
+#------COURSE ROUTES-----------------------------------------------------------------
 
 @app.route("/")
 @app.route("/api/courses/")
@@ -41,10 +42,10 @@ def get_courses():
     return success_response({"courses": courses})
 
 
-@app.route("/api/courses/<int:user_id>/<int:course_id/enroll>", methods=["POST"])
+@app.route("/api/courses/<int:user_id>/<int:course_id>/enroll/", methods=["POST"])
 def enroll_in_course(user_id, course_id):
     """
-    Endpoint for enrolling in a course.
+    Endpoint for enrolling a user into a course by user id and course id
     """
     user = User.query.filter_by(id = user_id).first()
     if user is None:
@@ -90,3 +91,7 @@ def delete_course(course_id, user_id):
     db.session.delete(course)
     db.session.commit()
     return success_response(course.serialize())
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)

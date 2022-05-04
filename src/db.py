@@ -169,8 +169,9 @@ class Course(db.Model):
 class OfficeHours(db.Model):
     __tablename__ = "office_hours"
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    time = db.Column(db.Integer, nullable = False)
+    time = db.Column(db.String, nullable = False)
     location = db.Column(db.String, nullable = False)
+    day = db.Column(db.String, nullable = False)
     
     course_id = db.Column(db.Integer, db.ForeignKey("courses.course_id"), nullable = False)  # the course the OH is for
     ta_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable = False)  #the ta creating the OH
@@ -183,10 +184,11 @@ class OfficeHours(db.Model):
         """
         initalize an Office Hour object/entry
         """
-        self.time = kwargs.get("time", "")
-        self.location = kwargs.get("location", "")
-        self.course = kwargs.get("course") 
-        self.ta = kwargs.get("ta")
+        self.time = kwargs.get("time")
+        self.location = kwargs.get("location")
+        self.location = kwargs.get("day")
+        self.course_id = kwargs.get("course_id") 
+        self.ta_id = kwargs.get("ta_id")
 
     def serialize(self):
         """
@@ -195,10 +197,10 @@ class OfficeHours(db.Model):
         return {
             "id": self.id,
             "time": self.time,
+            "day": self.day,
             "location": self.location,
             "course": self.course.simple_serialize(),
-            "ta": self.ta.simple_serialize()
-            
+            "ta": self.ta.simple_serialize()            
         }
 
     def simple_serialize(self):
@@ -208,5 +210,6 @@ class OfficeHours(db.Model):
         return {
             "id": self.id,
             "time": self.time,
+            "day": self.day,
             "location": self.location
         }

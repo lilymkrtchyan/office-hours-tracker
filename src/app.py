@@ -1,3 +1,4 @@
+from email.errors import FirstHeaderLineIsContinuationDefect
 import json
 
 from db import db
@@ -78,7 +79,7 @@ def enroll_in_course(user_id, course_id):
     else:
         course.students.append(user)
     db.session.commit()
-    return success_response(new_course.serialize(), 201)
+    return success_response(user.serialize(), 201)
 
 
 @app.route("/api/course/", methods=["POST"])
@@ -113,6 +114,92 @@ def delete_course(course_id, user_id):
     db.session.delete(course)
     db.session.commit()
     return success_response(course.serialize())
+
+@app.route("/api/officehours/")
+def get_all_office_hours():
+    """
+    Endpoint for getting all office hours based on filter
+    """
+    office_hours = users_dao.get_all_oh()
+    return success_response({"office_hours":[o.serialize() for o in office_hours]})
+
+
+@app.route("/api/officehours/",methods = ["POST"])
+def get_all_office_hours_filter():
+    """
+    Endpoint for getting all office hours based on filter
+    """
+    body = json.loads(request.data)
+    course_code = body.get("course_code")
+    if course_code is not None:
+        course_code = course_code.replace(" ", "").spaceFree.lower()
+    time = body.get("time")
+    day = body.get("day")
+    location = body.get("location")
+    ta_name = body.get("ta_name")
+    office_hours = users_dao.get_oh_filtered(day,time,location,course_code,ta_name)
+    return success_response({"office_hours":[o.serialize() for o in office_hours]})
+
+@app.route("/api/officehours/create/",methods = ["POST"])
+def create_officehour():
+    """
+    Endpoint for creating office hour
+    """
+    body = json.loads(request.data)
+    day = body.get("day")
+    time = body.get("time")
+    location = body.get("location")
+    course_id = body.get("course_id")
+    ta_id = body.get("ta_id")
+    if day is None or time is None or location is None or course_id is None or ta_id is None:
+        return failure_response("Office Hour info not found!")
+    ta = users_dao.get_user_by_id(ta_id)
+    course = users_dao.get_course_by_id(course_id)
+    if course is None:
+        return failure_response("Course not found!")
+    if ta is None:
+        return failure_response("Ta not found!")
+    new_oh = users_dao.create_oh(day,time,location,course_id,ta_id)
+    return success_response(new_oh.serialize())
+
+
+@app.route("/api/officehours/<int:office_hour_id>/",methods = ["POST"])
+def update_officehour(office_hour_id):
+    """
+    Endpoint for updating office hour by id
+    """
+    oh = users_dao.get_oh(office_hour_id)
+    if oh is None:
+        return failure_response("Office hour not found!")
+    body = json.loads(request.data)
+    day = body.get("day")
+    time = body.get("time")
+    location = body.get("location")
+
+    if day is not None:
+        oh.day = day
+    if time is not None:
+        oh.time = time
+    if location is not None:
+        oh.location = location
+    return success_response(oh.serialize())
+
+
+@app.route("/api/officehours/delete/<int:office_hour_id>/",methods = ["DELETE"])
+def delete_officehour(office_hour_id):
+    """
+    Endpoint for deleting office hour by id
+    """
+    oh = users_dao.get_oh(office_hour_id)
+    if oh is None:
+        return failure_response("Office hour not found!")
+    db.session.delete(oh)
+    db.session.commit()
+    return success_response(oh.serialize())
+
+
+
+
 
 #-----AUTHORIZATION ROUTES-----------------------------------------------------------------------------------
 

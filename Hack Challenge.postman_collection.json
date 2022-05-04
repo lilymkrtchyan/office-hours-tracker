@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6f3455e8-a0ec-4e94-8169-2f9ae8dd0f78",
+		"_postman_id": "1fd6c4c8-5997-4a93-8734-50b5f1ba8259",
 		"name": "Hack Challenge",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -87,6 +87,35 @@
 								"courses",
 								"0",
 								"0",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Course",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\": \"CS 4780\",\r\n    \"name\": \"Machine Learning\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/courses/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"courses",
 								""
 							]
 						}
@@ -205,6 +234,141 @@
 							"port": "5000",
 							"path": [
 								"logout",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Office Hour Requests",
+			"item": [
+				{
+					"name": "Get All Office Hours",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/officehours/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"officehours",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Office Hours Filtered",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"day\": \"Monday\",\r\n    \"location\": \"OLH 1101\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/officehours/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"officehours",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Office hour",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"day\": \"Monday\",\r\n    \"time\": \"5:45 PM\",\r\n    \"location\": \"OLH 1101\",\r\n    \"course_id\": 0,\r\n    \"ta_id\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/officehours/create/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"officehours",
+								"create",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Office Hours",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/officehours/0/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"officehours",
+								"0",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Office Hours",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"day\": \"Friday\",\r\n    \"time\": \"10:00 PM\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/officehours/0/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"officehours",
+								"0",
 								""
 							]
 						}

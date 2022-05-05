@@ -122,6 +122,7 @@ def get_oh_filtered(day = None, time = None, location = None, course_code = None
     """
     Gets office hours filtered on office hour characteristics
     """
+    filtered = OfficeHours.query
     if day is not None:
         filtered = OfficeHours.query.filter(OfficeHours.day == day)
     if time is not None:

@@ -191,7 +191,7 @@ class OfficeHours(db.Model):
         """
         self.time = kwargs.get("time")
         self.location = kwargs.get("location")
-        self.location = kwargs.get("day")
+        self.day = kwargs.get("day")
         self.course_id = kwargs.get("course_id") 
         self.ta_id = kwargs.get("ta_id")
 

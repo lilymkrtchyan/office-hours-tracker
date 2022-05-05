@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "401926e1-d288-4251-a054-bc0b5390aa32",
+		"_postman_id": "1fd6c4c8-5997-4a93-8734-50b5f1ba8259",
 		"name": "Hack Challenge",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -34,7 +34,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "localhost:5000/api/courses/0/0/enroll/",
+							"raw": "localhost:5000/api/courses/1/1/enroll/",
 							"host": [
 								"localhost"
 							],
@@ -42,8 +42,8 @@
 							"path": [
 								"api",
 								"courses",
-								"0",
-								"0",
+								"1",
+								"1",
 								"enroll",
 								""
 							]
@@ -134,7 +134,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"ep439@cornell.edu\",\r\n    \"password\": \"helloworld!\",\r\n    \"name\": \"Emily Penna\",\r\n    \"netid\": \"ep439\"\r\n\r\n\r\n}",
+							"raw": "{\r\n    \"email\": \"ep439@cornell.edu\",\r\n    \"password\": \"helloworld!\",\r\n    \"name\": \"Emily\",\r\n    \"netid\": \"ap439\",\r\n    \"is_ta\": true\r\n\r\n\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -163,7 +163,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"ep439@cornell.edu\",\r\n    \"password\": \"helloworld!\",\r\n    \"is_ta\": true\r\n}",
+							"raw": "{\r\n    \"email\": \"ep439@cornell.edu\",\r\n    \"password\": \"helloworld!\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -272,7 +272,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"day\": \"Monday\",\r\n    \"location\": \"OLH 1101\"\r\n}",
+							"raw": "{\r\n    \"location\": \"Gates Hall\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -301,7 +301,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"day\": \"Monday\",\r\n    \"time\": \"5:45 PM\",\r\n    \"location\": \"OLH 1101\",\r\n    \"course_id\": 1,\r\n    \"ta_id\": 1\r\n}",
+							"raw": "{\r\n    \"day\": \"Tuesday\",\r\n    \"time\": \"6:45 PM\",\r\n    \"location\": \"Gates Hall\",\r\n    \"course_id\": 1,\r\n    \"ta_id\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -360,7 +360,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:5000/api/officehours/0/",
+							"raw": "localhost:5000/api/officehours/1/",
 							"host": [
 								"localhost"
 							],
@@ -368,7 +368,7 @@
 							"path": [
 								"api",
 								"officehours",
-								"0",
+								"1",
 								""
 							]
 						}

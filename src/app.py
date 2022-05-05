@@ -201,7 +201,7 @@ def delete_officehour(office_hour_id):
     return success_response(oh.serialize())
 
 
-#-----AUTHORIZATION ROUTES-----------------------------------------------------------------------------------
+#-----AUTHORIZATION AND USER ROUTES-----------------------------------------------------------------------------------
 
 def extract_token(request):
     """
@@ -226,32 +226,34 @@ def register_account():
     body = json.loads(request.data)
     email = body.get("email")
     password = body.get("password")
+    name = body.get("name")
+    netid = body.get("netid")
+    is_ta = body.get("is_ta", False)
 
     if email is None or password is None:
         return failure_response("Missing email or password")
+    if name is None:
+        return failure_response("Missing name")
+    if netid is None:
+        return failure_response("Missing netid")
     
-    was_successful, user = users_dao.create_user(email,password)
+    was_successful, user = users_dao.create_user(email,password,name,netid,is_ta)
 
     if not was_successful:
         return failure_response("User already exists")
 
-    return success_response(
-        {
-            "session_token": user.session_token,
-            "session_expiration": str(user.session_expiration),
-            "update_token": user.update_token               
-        }, 201
-    )
+    return success_response(user.serialize(), 201 )
 
 
 @app.route("/login/", methods=["POST"])
 def login():
     """
-    Endpoint for logging in a user
+    Endpoint for logging in a user, can login as a student or ta
     """
     body = json.loads(request.data)
     email = body.get("email")
     password = body.get("password") 
+    is_ta = body.get("is_ta", False)
 
     if email is None or password is None:
         return failure_response("Missing email or password", 400)
@@ -261,14 +263,10 @@ def login():
     if not was_successful:
         return failure_response("Incorrect username or password", 401)
 
-    return success_response(
-        {
-            "session_token": user.session_token,
-            "session_expiration": str(user.session_expiration),
-            "update_token": user.update_token
-        }
+    #update if user is now a student or a ta:
+    users_dao.update_user_status(email, is_ta)
 
-    )
+    return success_response(user.serialize())
 
 
 @app.route("/session/", methods=["POST"])
@@ -313,6 +311,9 @@ def logout():
     return success_response({
         "message": "You have successfully logged out!"
     })
+
+#-----USER ROUTES----------------------------------------------------------------------------
+
 
 
 if __name__ == "__main__":

@@ -31,15 +31,15 @@ class User(db.Model):
     name = db.Column(db.String, nullable = False)
     netid = db.Column(db.String, nullable = False)
     is_ta = db.Column(db.Boolean, nullable = False) #true is the user is a ta, false otherwise
+
+    # User information
+    email = db.Column(db.String, nullable=False, unique=True)
+    password_digest = db.Column(db.String, nullable=False)
    
     #relationships:
     student_courses = db.relationship("Course", secondary= student_association_table, back_populates="students")
     ta_courses = db.relationship("Course", secondary= ta_association_table, back_populates="tas")
     office_hours = db.relationship("OfficeHours", cascade="delete")
-
-    # User information
-    email = db.Column(db.String, nullable=False, unique=True)
-    password_digest = db.Column(db.String, nullable=False)
 
     # Session information. Here there is only one session
     session_token = db.Column(db.String, nullable=False, unique=True)
@@ -66,8 +66,13 @@ class User(db.Model):
             "id": self.user_id,
             "name": self.name,
             "netid": self.netid,
+            "is_ta": self.is_ta,
             "student_courses": [c.simple_serialize() for c in self.student_courses],
-            "ta_courses": [t.simple_serialize() for t in self.ta_courses]
+            "ta_courses": [t.simple_serialize() for t in self.ta_courses],
+
+            "session_token": self.session_token,
+            "session_expiration": str(self.session_expiration),
+            "update_token": self.update_token
         }
 
     def simple_serialize(self):

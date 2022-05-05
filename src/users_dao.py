@@ -3,12 +3,14 @@ DAO (Data Access Object) file
 
 Helper file containing functions for accessing data in our database
 """
+from http.client import NETWORK_AUTHENTICATION_REQUIRED
+from unicodedata import name
 from db import db
 from db import User
 from db import OfficeHours
 from db import Course
 
-#----AUTHENICATION FUNCTIONS-------------------------------------------------------------
+#----AUTHENICATION AND USER FUNCTIONS-------------------------------------------------------------
 
 def get_user_by_id(user_id):
     """
@@ -49,7 +51,7 @@ def verify_credentials(email, password):
     return optional_user.verify_password(password), optional_user
 
 
-def create_user(email, password):
+def create_user(email, password, name, netid, is_ta):
     """
     Creates a User object in the database
 
@@ -60,7 +62,13 @@ def create_user(email, password):
     if optional_user is not None:
         return False, optional_user
     
-    user = User(email=email, password=password)
+    user = User(
+        email=email, 
+        password=password,
+        name = name,
+        netid = netid,
+        is_ta= is_ta
+        )
     db.session.add(user)
     db.session.commit()
     return True, user
@@ -80,6 +88,15 @@ def renew_session(update_token):
     db.session.commit()
 
     return user 
+
+def update_user_status(email, is_ta):
+    """
+    Updates the user's is_ta status with whatever label they logged in with by their email.
+    """
+    user = get_user_by_email(email)
+    user.is_ta = is_ta
+
+
 
 #-----OFFICE HOUR FUNCTIONS-----------------------------------------------------------------------------
 

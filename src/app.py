@@ -142,8 +142,8 @@ def get_all_office_hours_filter():
     office_hours = users_dao.get_oh_filtered(day,time,location,course_code,ta_name)
     return success_response({"office_hours":[o.serialize() for o in office_hours]})
 
-@app.route("/api/officehours/create/",methods = ["POST"])
-def create_officehour():
+@app.route("/api/officehours/create/<int:course_id>/<int:ta_id>/",methods = ["POST"])
+def create_officehour(course_id,ta_id):
     """
     Endpoint for creating office hour
     """
@@ -151,10 +151,8 @@ def create_officehour():
     day = body.get("day")
     time = body.get("time")
     location = body.get("location")
-    course_id = body.get("course_id")
-    ta_id = body.get("ta_id")
     
-    if day is None or time is None or location is None or course_id is None or ta_id is None:
+    if day is None or time is None or location is None:
         return failure_response("Office Hour info not found!")
     ta = users_dao.get_user_by_id(ta_id)
     course = users_dao.get_course_by_id(course_id)
@@ -171,7 +169,7 @@ def update_officehour(office_hour_id):
     """
     Endpoint for updating office hour by id
     """
-    oh = users_dao.get_oh(office_hour_id)
+    oh = users_dao.get_oh_by_id(office_hour_id)
     if oh is None:
         return failure_response("Office hour not found!")
     body = json.loads(request.data)

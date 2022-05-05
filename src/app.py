@@ -115,6 +115,8 @@ def delete_course(course_id, user_id):
     db.session.commit()
     return success_response(course.serialize())
 
+#------OFFICE ROUTES-----------------------------------------------------------------
+
 @app.route("/api/officehours/")
 def get_all_office_hours():
     """
@@ -151,6 +153,7 @@ def create_officehour():
     location = body.get("location")
     course_id = body.get("course_id")
     ta_id = body.get("ta_id")
+    
     if day is None or time is None or location is None or course_id is None or ta_id is None:
         return failure_response("Office Hour info not found!")
     ta = users_dao.get_user_by_id(ta_id)
@@ -196,9 +199,6 @@ def delete_officehour(office_hour_id):
     db.session.delete(oh)
     db.session.commit()
     return success_response(oh.serialize())
-
-
-
 
 
 #-----AUTHORIZATION ROUTES-----------------------------------------------------------------------------------

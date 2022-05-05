@@ -8,11 +8,13 @@ from db import User
 from db import OfficeHours
 from db import Course
 
+#----AUTHENICATION FUNCTIONS-------------------------------------------------------------
+
 def get_user_by_id(user_id):
     """
     Returns a user object from the database given an id
     """
-    return User.query.filter(User.id == user_id).first()
+    return User.query.filter(User.user_id == user_id).first()
 
 def get_user_by_email(email):
     """
@@ -63,11 +65,29 @@ def create_user(email, password):
     db.session.commit()
     return True, user
 
+
+def renew_session(update_token):
+    """
+    Renews a user's session token
+    Returns the User object
+    """
+    user = get_user_by_update_token(update_token)
+
+    if user is None:
+        raise Exception("Invalid update token")  #in our dao file, return exception rather than json failure response
+
+    user.renew_session()
+    db.session.commit()
+
+    return user 
+
+#-----OFFICE HOUR FUNCTIONS-----------------------------------------------------------------------------
+
 def get_course_by_id(course_id):
     """
     Returns a user object from the database given an id
     """
-    return Course.query.filter(Course.id == course_id).first()
+    return Course.query.filter(Course.course_id == course_id).first()
 
 def get_oh_by_id(oh_id):
     """
@@ -113,19 +133,5 @@ def create_oh(day, time, location, course_id, ta_id):
     return new_oh
 
 
-def renew_session(update_token):
-    """
-    Renews a user's session token
-    
-    Returns the User object
-    """
-    user = get_user_by_update_token(update_token)
 
-    if user is None:
-        raise Exception("Invalid update token")  #in our dao file, return exception rather than json failure response
-
-    user.renew_session()
-    db.session.commit()
-
-    return user 
 

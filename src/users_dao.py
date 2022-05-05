@@ -124,7 +124,7 @@ def get_oh_filtered(day = None, time = None, location = None, course_code = None
     """
     filtered = OfficeHours.query
     if day is not None:
-        filtered = OfficeHours.query.filter(OfficeHours.day == day)
+        filtered = filtered.filter(OfficeHours.day == day)
     if time is not None:
         filtered = filtered.filter(OfficeHours.time == time)
     if location is not None:

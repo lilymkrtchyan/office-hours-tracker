@@ -180,7 +180,7 @@ def create_officehour(course_id,ta_id):
     if ta is None:
         return failure_response("Ta not found!")
     new_oh = oh_dao.create_oh(day,start_time,end_time,location,course_id,ta_id)
-    return success_response(new_oh.serialize())
+    return success_response(new_oh.serialize(), 201)
 
 
 @app.route("/api/officehours/<int:office_hour_id>/",methods = ["POST"])

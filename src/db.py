@@ -174,7 +174,8 @@ class Course(db.Model):
 class OfficeHours(db.Model):
     __tablename__ = "office_hours"
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    time = db.Column(db.String, nullable = False)
+    start_time = db.Column(db.String, nullable = False)
+    end_time = db.Column(db.String, nullable = False)
     location = db.Column(db.String, nullable = False)
     day = db.Column(db.String, nullable = False)
     
@@ -189,7 +190,8 @@ class OfficeHours(db.Model):
         """
         initalize an Office Hour object/entry
         """
-        self.time = kwargs.get("time")
+        self.start_time = kwargs.get("start_time")
+        self.end_time = kwargs.get("end_time")
         self.location = kwargs.get("location")
         self.day = kwargs.get("day")
         self.course_id = kwargs.get("course_id") 
@@ -201,7 +203,8 @@ class OfficeHours(db.Model):
         """
         return {
             "id": self.id,
-            "time": self.time,
+            "start_time": self.start_time,
+            "end_time": self.end_time,
             "day": self.day,
             "location": self.location,
             "course": self.course.simple_serialize(),
@@ -214,7 +217,8 @@ class OfficeHours(db.Model):
         """
         return {
             "id": self.id,
-            "time": self.time,
+            "start_time": self.start_time,
+            "end_time": self.end_time,
             "day": self.day,
             "location": self.location
         }

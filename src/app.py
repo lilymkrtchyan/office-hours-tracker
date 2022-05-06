@@ -86,6 +86,22 @@ def enroll_in_course(user_id, course_id):
     return success_response(user.serialize(), 201)
 
 
+@app.route("/api/courses/<int:user_id>/<course_id>/unenroll/", methods=["GET"])
+def unenroll(user_id, course_id):
+    course = Course.query.filter_by(course_id = course_id).first()
+    if course is None:
+        return failure_response("Course not found!")
+    user = User.query.filter_by(user_id = user_id).first()
+    if user is None:
+        return failure_response("User not found!")
+    if not user in course.students:
+        return failure_response("Student is not enrolled in this course!")
+    course.students.remove(user)
+    db.session.commit()
+    return success_response(user.serialize(), 201)
+
+
+
 @app.route("/api/course/", methods=["POST"])
 def get_course():
     """
@@ -98,6 +114,8 @@ def get_course():
     if course is None:
         return failure_response("course not found!")
     return success_response(course.serialize())
+
+
 
 
 @app.route("/api/courses/<int:course_id>/", methods=["DELETE"])

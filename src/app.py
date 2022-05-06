@@ -10,6 +10,7 @@ from db import Course
 from db import User
 from db import OfficeHours
 import users_dao
+import oh_dao
 import datetime
 
 app = Flask(__name__)
@@ -57,7 +58,10 @@ def create_course():
         return failure_response("Please insert the code", 400)
     if body.get("name") is None:
         return failure_response("Please insert the name", 400)
-    new_course = Course(code=body.get("code"), name=body.get("name"))
+   
+    spaceFree = body.get("code").replace(" ", "")
+    lowercase = spaceFree.lower()
+    new_course = Course(code=lowercase, name=body.get("name"))
     db.session.add(new_course)
     db.session.commit()
     return success_response(new_course.serialize(), 201)
@@ -96,21 +100,15 @@ def get_course():
     return success_response(course.serialize())
 
 
-@app.route("/api/courses/<int:course_id>/<int:user_id>/", methods=["DELETE"])
-def delete_course(course_id, user_id):
+@app.route("/api/courses/<int:course_id>/", methods=["DELETE"])
+def delete_course(course_id):
     """
     Endpoint for deleting a course by id and removing corresponding TAs/students.
     """
     course = Course.query.filter_by(course_id = course_id).first()
     if course is None:
         return failure_response("Course not found!")
-    user = User.query.filter_by(user_id = user_id).first()
-    if user is None:
-        return failure_response("User not found!")
-    if user.is_ta:
-        course.tas.remove(user)
-    else:
-        course.students.remove(user)
+    
     db.session.delete(course)
     db.session.commit()
     return success_response(course.serialize())
@@ -122,7 +120,7 @@ def get_all_office_hours():
     """
     Endpoint for getting all office hours based on filter
     """
-    office_hours = users_dao.get_all_oh()
+    office_hours = oh_dao.get_all_oh()
     return success_response({"office_hours":[o.serialize() for o in office_hours]})
 
 
@@ -134,12 +132,12 @@ def get_all_office_hours_filter():
     body = json.loads(request.data)
     course_code = body.get("course_code")
     if course_code is not None:
-        course_code = course_code.replace(" ", "").spaceFree.lower()
+        course_code = course_code.replace(" ", "").lower()
     time = body.get("time")
     day = body.get("day")
     location = body.get("location")
     ta_name = body.get("ta_name")
-    office_hours = users_dao.get_oh_filtered(day,time,location,course_code,ta_name)
+    office_hours = oh_dao.get_oh_filtered(day,time,location,course_code,ta_name)
     return success_response({"office_hours":[o.serialize() for o in office_hours]})
 
 @app.route("/api/officehours/create/<int:course_id>/<int:ta_id>/",methods = ["POST"])
@@ -155,12 +153,12 @@ def create_officehour(course_id,ta_id):
     if day is None or time is None or location is None:
         return failure_response("Office Hour info not found!")
     ta = users_dao.get_user_by_id(ta_id)
-    course = users_dao.get_course_by_id(course_id)
+    course = oh_dao.get_course_by_id(course_id)
     if course is None:
         return failure_response("Course not found!")
     if ta is None:
         return failure_response("Ta not found!")
-    new_oh = users_dao.create_oh(day,time,location,course_id,ta_id)
+    new_oh = oh_dao.create_oh(day,time,location,course_id,ta_id)
     return success_response(new_oh.serialize())
 
 
@@ -169,7 +167,7 @@ def update_officehour(office_hour_id):
     """
     Endpoint for updating office hour by id
     """
-    oh = users_dao.get_oh_by_id(office_hour_id)
+    oh = oh_dao.get_oh_by_id(office_hour_id)
     if oh is None:
         return failure_response("Office hour not found!")
     body = json.loads(request.data)
@@ -186,17 +184,17 @@ def update_officehour(office_hour_id):
     return success_response(oh.serialize())
 
 
-@app.route("/api/officehours/delete/<int:office_hour_id>/",methods = ["DELETE"])
+@app.route("/api/officehours/<int:office_hour_id>/",methods = ["DELETE"])
 def delete_officehour(office_hour_id):
     """
     Endpoint for deleting office hour by id
     """
-    oh = users_dao.get_oh(office_hour_id)
+    oh = oh_dao.get_oh_by_id(office_hour_id)
     if oh is None:
         return failure_response("Office hour not found!")
     db.session.delete(oh)
     db.session.commit()
-    return success_response(oh.serialize())
+    return success_response("Successfully deleted")        #look at oh.serialize()
 
 
 #-----AUTHORIZATION AND USER ROUTES-----------------------------------------------------------------------------------

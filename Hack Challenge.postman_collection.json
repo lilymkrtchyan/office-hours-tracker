@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1fd6c4c8-5997-4a93-8734-50b5f1ba8259",
+		"_postman_id": "06c58bbc-b08f-44fe-bfd8-4509c5402693",
 		"name": "Hack Challenge",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -56,6 +56,15 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\":  \"CS 4780\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "localhost:5000/api/courses/",
 							"host": [
@@ -134,7 +143,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"ep439@cornell.edu\",\r\n    \"password\": \"helloworld!\",\r\n    \"name\": \"Emily\",\r\n    \"netid\": \"ap439\",\r\n    \"is_ta\": true\r\n\r\n\r\n}",
+							"raw": "{\r\n    \"email\": \"ep49@cornell.edu\",\r\n    \"password\": \"helloworld!\",\r\n    \"name\": \"Lily\",\r\n    \"netid\": \"ap439\",\r\n    \"is_ta\": true\r\n\r\n\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -163,7 +172,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"ep439@cornell.edu\",\r\n    \"password\": \"helloworld!\"\r\n}",
+							"raw": "{\r\n    \"email\": \"ep49@cornell.edu\",\r\n    \"password\": \"helloworld!\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -272,7 +281,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"location\": \"Gates Hall\"\r\n}",
+							"raw": "{\r\n    \"location\": \"PSB\",\r\n    \"course_code\": \"cs2800\",\r\n    \"ta_name\": \"Lily\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -301,7 +310,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"day\": \"Tuesday\",\r\n    \"time\": \"6:45 PM\",\r\n    \"location\": \"Gates Hall\",\r\n    \"course_id\": 1,\r\n    \"ta_id\": 1\r\n}",
+							"raw": "{\r\n    \"day\": \"Tuesday\",\r\n    \"time\": \"6:45 PM\",\r\n    \"location\": \"PSB\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -309,7 +318,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:5000/api/officehours/create/1/1/",
+							"raw": "localhost:5000/api/officehours/create//1/",
 							"host": [
 								"localhost"
 							],
@@ -318,7 +327,7 @@
 								"api",
 								"officehours",
 								"create",
-								"1",
+								"",
 								"1",
 								""
 							]
@@ -332,7 +341,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:5000/api/officehours/0/",
+							"raw": "localhost:5000/api/officehours/1/",
 							"host": [
 								"localhost"
 							],
@@ -340,7 +349,7 @@
 							"path": [
 								"api",
 								"officehours",
-								"0",
+								"1",
 								""
 							]
 						}

@@ -1,5 +1,5 @@
 """
-DAO (Data Access Object) file
+DAO (Data Access Object) file for Users
 
 Helper file containing functions for accessing data in our database
 """
@@ -99,57 +99,4 @@ def update_user_status(email, is_ta):
 
 
 #-----OFFICE HOUR FUNCTIONS-----------------------------------------------------------------------------
-
-def get_course_by_id(course_id):
-    """
-    Returns a user object from the database given an id
-    """
-    return Course.query.filter(Course.course_id == course_id).first()
-
-def get_oh_by_id(oh_id):
-    """
-    Gets office hour by id
-    """
-    return OfficeHours.query.filter(OfficeHours.id == oh_id).first()
-
-def get_all_oh():
-    """
-    Gets all office hours and return them as list of office hour objects
-    """
-    return OfficeHours.query.all()
-
-def get_oh_filtered(day = None, time = None, location = None, course_code = None, ta_name = None):
-    """
-    Gets office hours filtered on office hour characteristics
-    """
-    filtered = OfficeHours.query
-    if day is not None:
-        filtered = filtered.filter(OfficeHours.day == day)
-    if time is not None:
-        filtered = filtered.filter(OfficeHours.time == time)
-    if location is not None:
-        filtered = filtered.filter(OfficeHours.location == location)
-    if course_code is not None:
-        filtered = filtered.filter(OfficeHours.course.code == course_code)
-    if ta_name is not None:
-        filtered = filtered.filter(OfficeHours.ta.name == ta_name)
-    return filtered.all()
-
-def create_oh(day, time, location, course_id, ta_id):
-    """
-    Creates office hour and return true if succesful
-    """
-    new_oh = OfficeHours(
-        day = day,
-        time = time,
-        location = location,
-        course_id = course_id,
-        ta_id = ta_id
-    )
-    db.session.add(new_oh)
-    db.session.commit()
-    return new_oh
-
-
-
 

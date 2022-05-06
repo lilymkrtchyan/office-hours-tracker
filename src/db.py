@@ -69,6 +69,7 @@ class User(db.Model):
             "is_ta": self.is_ta,
             "student_courses": [c.simple_serialize() for c in self.student_courses],
             "ta_courses": [t.simple_serialize() for t in self.ta_courses],
+            "office_hours": [o.simple_serialize() for o in self.office_hours],
 
             "session_token": self.session_token,
             "session_expiration": str(self.session_expiration),
@@ -133,7 +134,6 @@ class Course(db.Model):
     code = db.Column(db.String, nullable = False)    #The number following the subject, etc: CS2800
     name = db.Column(db.String, nullable = False)     #The course tite, etc: Discrete Structures
     
-
     #relationships
     office_hours = db.relationship("OfficeHours", cascade="delete")
     tas = db.relationship("User", secondary= ta_association_table, back_populates="ta_courses")
@@ -177,6 +177,7 @@ class OfficeHours(db.Model):
     time = db.Column(db.String, nullable = False)
     location = db.Column(db.String, nullable = False)
     day = db.Column(db.String, nullable = False)
+    attendance = db.Column(db.Integer, nullable = False)
     
     course_id = db.Column(db.Integer, db.ForeignKey("courses.course_id"), nullable = False)  # the course the OH is for
     ta_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable = False)  #the ta creating the OH
@@ -194,6 +195,7 @@ class OfficeHours(db.Model):
         self.day = kwargs.get("day")
         self.course_id = kwargs.get("course_id") 
         self.ta_id = kwargs.get("ta_id")
+        self.attendance = kwargs.get("attendance")
 
     def serialize(self):
         """
@@ -204,6 +206,7 @@ class OfficeHours(db.Model):
             "time": self.time,
             "day": self.day,
             "location": self.location,
+            "attendance": self.attendance,
             "course": self.course.simple_serialize(),
             "ta": self.ta.simple_serialize()            
         }
@@ -216,5 +219,6 @@ class OfficeHours(db.Model):
             "id": self.id,
             "time": self.time,
             "day": self.day,
-            "location": self.location
+            "location": self.location,
+            "attendance": self.attendance
         }

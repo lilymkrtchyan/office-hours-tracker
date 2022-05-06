@@ -56,7 +56,8 @@ def create_oh(day, time, location, course_id, ta_id):
         time = time,
         location = location,
         course_id = course_id,
-        ta_id = ta_id
+        ta_id = ta_id,
+        attendance = 0
     )
     db.session.add(new_oh)
     db.session.commit()

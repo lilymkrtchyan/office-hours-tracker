@@ -12,6 +12,12 @@ from db import Course
 
 #----AUTHENICATION AND USER FUNCTIONS-------------------------------------------------------------
 
+def get_all_users():
+    """
+    Gets all users and return them as list of user objects
+    """
+    return User.query.all()
+
 def get_user_by_id(user_id):
     """
     Returns a user object from the database given an id
@@ -96,7 +102,4 @@ def update_user_status(email, is_ta):
     user = get_user_by_email(email)
     user.is_ta = is_ta
 
-
-
-#-----OFFICE HOUR FUNCTIONS-----------------------------------------------------------------------------
 

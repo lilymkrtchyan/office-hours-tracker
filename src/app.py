@@ -14,7 +14,7 @@ import oh_dao
 import datetime
 
 app = Flask(__name__)
-db_filename = "cms.db"
+db_filename = "oht.db"
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///%s" % db_filename
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -159,6 +159,7 @@ def create_officehour(course_id,ta_id):
     if ta is None:
         return failure_response("Ta not found!")
     new_oh = oh_dao.create_oh(day,time,location,course_id,ta_id)
+    ta.office_hours.append(new_oh)
     return success_response(new_oh.serialize())
 
 
@@ -196,6 +197,53 @@ def delete_officehour(office_hour_id):
     db.session.commit()
     return success_response("Successfully deleted")        #look at oh.serialize()
 
+
+#-----ATTENDING OH ROUTES------------------------------------------------------------------------------------
+@app.route("/api/officehours/<int:office_hour_id>/attendance/")
+def get_attendance(office_hour_id):
+    """
+    Endpoint for getting the attendance of an office hour by its id
+    """
+    oh = oh_dao.get_oh_by_id(office_hour_id)
+    if oh is None:
+        return failure_response("Office hour not found!")
+    return success_response(
+        {
+            "attendance": oh.attendance
+        }
+    )
+
+@app.route("/api/officehours/<int:office_hour_id>/attend/")
+def attend_officehour(office_hour_id):
+    """
+    Endpoint for selecting an office hour for a user to attend. 
+    Increment the office hour's attendance by 1.
+    """
+    oh = oh_dao.get_oh_by_id(office_hour_id)
+    if oh is None:
+        return failure_response("Office hour not found!")
+
+    oh.attendance +=1
+
+    db.session.commit()
+    return success_response(oh.serialize())
+
+@app.route("/api/officehours/<int:office_hour_id>/unattend/")
+def remove_attendance(office_hour_id):
+    """
+    Endpoint for removing a user's attendance from an office hour.
+    Decrement the office hour's attendance by 1.
+    """
+    oh = oh_dao.get_oh_by_id(office_hour_id)
+    if oh is None:
+        return failure_response("Office hour not found!")
+    
+    oh.attendance -=1
+    if oh.attendance <= 0:
+        oh.attendance = 0
+
+    db.session.commit()
+    return success_response(oh.serialize())
 
 #-----AUTHORIZATION AND USER ROUTES-----------------------------------------------------------------------------------
 
@@ -307,6 +355,14 @@ def logout():
     return success_response({
         "message": "You have successfully logged out!"
     })
+
+@app.route("/api/users/")
+def get_all_users():
+    """
+    Endpoint for getting all users
+    """
+    users = users_dao.get_all_users()
+    return success_response({"users":[u.serialize() for u in users]})
 
 #-----USER ROUTES----------------------------------------------------------------------------
 

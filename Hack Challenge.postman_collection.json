@@ -14,11 +14,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:5000/api/courses/",
+							"raw": "{{server_url}}/api/courses/",
 							"host": [
-								"localhost"
+								"{{server_url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"courses",
@@ -34,11 +33,10 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "localhost:5000/api/courses/1/1/enroll/",
+							"raw": "{{server_url}}/api/courses/1/1/enroll/",
 							"host": [
-								"localhost"
+								"{{server_url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"courses",
@@ -66,14 +64,13 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:5000/api/courses/",
+							"raw": "{{server_url}}/api/course/",
 							"host": [
-								"localhost"
+								"{{server_url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
-								"courses",
+								"course",
 								""
 							]
 						}
@@ -86,16 +83,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:5000/api/courses/0/0/",
+							"raw": "{{server_url}}/api/courses/1/",
 							"host": [
-								"localhost"
+								"{{server_url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"courses",
-								"0",
-								"0",
+								"1",
 								""
 							]
 						}
@@ -109,7 +104,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"code\": \"CS 4780\",\r\n    \"name\": \"Machine Learning\"\r\n}",
+							"raw": "{\r\n    \"code\": \"CS 2800\",\r\n    \"name\": \"Discrete Structures\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -117,11 +112,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:5000/api/courses/",
+							"raw": "{{server_url}}/api/courses/",
 							"host": [
-								"localhost"
+								"{{server_url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"courses",
@@ -134,7 +128,7 @@
 			]
 		},
 		{
-			"name": "Authorization Requests",
+			"name": "Authorization and User Requests",
 			"item": [
 				{
 					"name": "register account",
@@ -143,7 +137,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"ep49@cornell.edu\",\r\n    \"password\": \"helloworld!\",\r\n    \"name\": \"Lily\",\r\n    \"netid\": \"ap439\",\r\n    \"is_ta\": true\r\n\r\n\r\n}",
+							"raw": "{\r\n    \"email\": \"emily@cornell.edu\",\r\n    \"password\": \"helloworld!\",\r\n    \"name\": \"emily\",\r\n    \"netid\": \"ap439\",\r\n    \"is_ta\": true\r\n\r\n\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -151,12 +145,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5000/register/",
-							"protocol": "http",
+							"raw": "{{server_url}}/register/",
 							"host": [
-								"localhost"
+								"{{server_url}}"
 							],
-							"port": "5000",
 							"path": [
 								"register",
 								""
@@ -172,7 +164,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"ep49@cornell.edu\",\r\n    \"password\": \"helloworld!\"\r\n}",
+							"raw": "{\r\n    \"email\": \"emily@cornell.edu\",\r\n    \"password\": \"helloworld!\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -180,11 +172,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:5000/login/",
+							"raw": "{{server_url}}/login/",
 							"host": [
-								"localhost"
+								"{{server_url}}"
 							],
-							"port": "5000",
 							"path": [
 								"login",
 								""
@@ -208,11 +199,10 @@
 							}
 						],
 						"url": {
-							"raw": "localhost:5000/session/",
+							"raw": "{{server_url}}/session/",
 							"host": [
-								"localhost"
+								"{{server_url}}"
 							],
-							"port": "5000",
 							"path": [
 								"session",
 								""
@@ -236,13 +226,31 @@
 							}
 						],
 						"url": {
-							"raw": "localhost:5000/logout/",
+							"raw": "{{server_url}}/logout/",
 							"host": [
-								"localhost"
+								"{{server_url}}"
 							],
-							"port": "5000",
 							"path": [
 								"logout",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server_url}}/api/users/",
+							"host": [
+								"{{server_url}}"
+							],
+							"path": [
+								"api",
+								"users",
 								""
 							]
 						}
@@ -260,11 +268,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:5000/api/officehours/",
+							"raw": "{{server_url}}/api/officehours/",
 							"host": [
-								"localhost"
+								"{{server_url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"officehours",
@@ -289,11 +296,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:5000/api/officehours/",
+							"raw": "{{server_url}}/api/officehours/",
 							"host": [
-								"localhost"
+								"{{server_url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"officehours",
@@ -318,16 +324,15 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:5000/api/officehours/create//1/",
+							"raw": "{{server_url}}/api/officehours/create/1/1/",
 							"host": [
-								"localhost"
+								"{{server_url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"officehours",
 								"create",
-								"",
+								"1",
 								"1",
 								""
 							]
@@ -341,11 +346,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:5000/api/officehours/1/",
+							"raw": "{{server_url}}/api/officehours/1/",
 							"host": [
-								"localhost"
+								"{{server_url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"officehours",
@@ -363,7 +367,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"day\": \"Friday\",\r\n    \"time\": \"10:00 PM\"\r\n}",
+							"raw": "{\r\n    \"day\": \"Sunday\",\r\n    \"time\": \"10:00 PM\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -371,15 +375,82 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:5000/api/officehours/1/",
+							"raw": "{{server_url}}/api/officehours/1/",
 							"host": [
-								"localhost"
+								"{{server_url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"officehours",
 								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Attendance Requests",
+			"item": [
+				{
+					"name": "get attendance of an office hour",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server_url}}/api/officehours/1/attendance/",
+							"host": [
+								"{{server_url}}"
+							],
+							"path": [
+								"api",
+								"officehours",
+								"1",
+								"attendance",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "attend office hour",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server_url}}/api/officehours/1/attend/",
+							"host": [
+								"{{server_url}}"
+							],
+							"path": [
+								"api",
+								"officehours",
+								"1",
+								"attend",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unattend office hour",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server_url}}/api/officehours/1/unattend/",
+							"host": [
+								"{{server_url}}"
+							],
+							"path": [
+								"api",
+								"officehours",
+								"1",
+								"unattend",
 								""
 							]
 						}

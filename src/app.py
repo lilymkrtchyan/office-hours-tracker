@@ -1,10 +1,8 @@
-from email.errors import FirstHeaderLineIsContinuationDefect
 import json
 
 from db import db
 from flask import Flask
 from flask import request
-from flask import Flask, session
 
 from db import Course
 from db import User
@@ -67,7 +65,7 @@ def create_course():
     return success_response(new_course.serialize(), 201)
 
 
-@app.route("/api/courses/<int:user_id>/<course_id>/enroll/", methods=["POST"])
+@app.route("/api/courses/<int:user_id>/<course_id>/enroll/", methods=["GET"])
 def enroll_in_course(user_id, course_id):
     """
     Endpoint for enrolling a user into a course by user id and course id
@@ -83,7 +81,23 @@ def enroll_in_course(user_id, course_id):
     else:
         course.students.append(user)
     db.session.commit()
-    return success_response(user.serialize(), 201)
+    return success_response(user.serialize(), 200)
+
+
+@app.route("/api/courses/<int:user_id>/<course_id>/unenroll/", methods=["GET"])
+def unenroll(user_id, course_id):
+    course = Course.query.filter_by(course_id = course_id).first()
+    if course is None:
+        return failure_response("Course not found!")
+    user = User.query.filter_by(user_id = user_id).first()
+    if user is None:
+        return failure_response("User not found!")
+    if not user in course.students:
+        return failure_response("Student is not enrolled in this course!")
+    course.students.remove(user)
+    db.session.commit()
+    return success_response(user.serialize(), 200)
+
 
 
 @app.route("/api/course/", methods=["POST"])
@@ -98,6 +112,8 @@ def get_course():
     if course is None:
         return failure_response("course not found!")
     return success_response(course.serialize())
+
+
 
 
 @app.route("/api/courses/<int:course_id>/", methods=["DELETE"])
@@ -133,11 +149,13 @@ def get_all_office_hours_filter():
     course_code = body.get("course_code")
     if course_code is not None:
         course_code = course_code.replace(" ", "").lower()
-    time = body.get("time")
+    start_time = body.get("start_time")
+    end_time = body.get("end_time")
     day = body.get("day")
     location = body.get("location")
     ta_name = body.get("ta_name")
-    office_hours = oh_dao.get_oh_filtered(day,time,location,course_code,ta_name)
+    ta_id = body.get("ta_id")
+    office_hours = oh_dao.get_oh_filtered(day,start_time,end_time,location,course_code,ta_name,ta_id)
     return success_response({"office_hours":[o.serialize() for o in office_hours]})
 
 @app.route("/api/officehours/create/<int:course_id>/<int:ta_id>/",methods = ["POST"])
@@ -147,10 +165,11 @@ def create_officehour(course_id,ta_id):
     """
     body = json.loads(request.data)
     day = body.get("day")
-    time = body.get("time")
+    start_time = body.get("start_time")
+    end_time = body.get("end_time")
     location = body.get("location")
     
-    if day is None or time is None or location is None:
+    if day is None or start_time is None or end_time is None or location is None:
         return failure_response("Office Hour info not found!")
     ta = users_dao.get_user_by_id(ta_id)
     course = oh_dao.get_course_by_id(course_id)
@@ -158,9 +177,9 @@ def create_officehour(course_id,ta_id):
         return failure_response("Course not found!")
     if ta is None:
         return failure_response("Ta not found!")
-    new_oh = oh_dao.create_oh(day,time,location,course_id,ta_id)
+    new_oh = oh_dao.create_oh(day,start_time,end_time,location,course_id,ta_id)
     ta.office_hours.append(new_oh)
-    return success_response(new_oh.serialize())
+    return success_response(new_oh.serialize(),201)
 
 
 @app.route("/api/officehours/<int:office_hour_id>/",methods = ["POST"])
@@ -173,13 +192,16 @@ def update_officehour(office_hour_id):
         return failure_response("Office hour not found!")
     body = json.loads(request.data)
     day = body.get("day")
-    time = body.get("time")
+    start_time = body.get("start_time")
+    end_time = body.get("end_time")
     location = body.get("location")
 
     if day is not None:
         oh.day = day
-    if time is not None:
-        oh.time = time
+    if start_time is not None:
+        oh.start_time = start_time
+    if end_time is not None:
+        oh.end_time = end_time
     if location is not None:
         oh.location = location
     return success_response(oh.serialize())

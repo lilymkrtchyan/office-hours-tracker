@@ -154,7 +154,8 @@ def get_all_office_hours_filter():
     day = body.get("day")
     location = body.get("location")
     ta_name = body.get("ta_name")
-    office_hours = oh_dao.get_oh_filtered(day,start_time,end_time,location,course_code,ta_name)
+    ta_id = body.get("ta_id")
+    office_hours = oh_dao.get_oh_filtered(day,start_time,end_time,location,course_code,ta_name,ta_id)
     return success_response({"office_hours":[o.serialize() for o in office_hours]})
 
 @app.route("/api/officehours/create/<int:course_id>/<int:ta_id>/",methods = ["POST"])

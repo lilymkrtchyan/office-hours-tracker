@@ -26,7 +26,7 @@ def get_all_oh():
     """
     return OfficeHours.query.all()
 
-def get_oh_filtered(day = None, start_time = None, end_time = None,location = None, course_code = None, ta_name = None):
+def get_oh_filtered(day = None, start_time = None, end_time = None,location = None, course_code = None, ta_name = None, ta_id = None):
     """
     Gets office hours filtered on office hour characteristics
     """
@@ -44,6 +44,9 @@ def get_oh_filtered(day = None, start_time = None, end_time = None,location = No
         filtered = filtered.filter(OfficeHours.location == location)
     if ta_name is not None:
         user = User.query.filter(User.name == ta_name).first()
+        filtered = filtered.filter(OfficeHours.ta == user)
+    if ta_id is not None:
+        user = User.query.filter(User.id == ta_id).first()
         filtered = filtered.filter(OfficeHours.ta == user)
     return filtered.all()
 

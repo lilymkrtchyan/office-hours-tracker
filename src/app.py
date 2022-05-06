@@ -1,11 +1,8 @@
-from email.errors import FirstHeaderLineIsContinuationDefect
 import json
-from tracemalloc import start
 
 from db import db
 from flask import Flask
 from flask import request
-from flask import Flask, session
 
 from db import Course
 from db import User

@@ -67,7 +67,7 @@ def create_course():
     return success_response(new_course.serialize(), 201)
 
 
-@app.route("/api/courses/<int:user_id>/<course_id>/enroll/", methods=["POST"])
+@app.route("/api/courses/<int:user_id>/<course_id>/enroll/", methods=["GET"])
 def enroll_in_course(user_id, course_id):
     """
     Endpoint for enrolling a user into a course by user id and course id
@@ -83,7 +83,7 @@ def enroll_in_course(user_id, course_id):
     else:
         course.students.append(user)
     db.session.commit()
-    return success_response(user.serialize(), 201)
+    return success_response(user.serialize(), 200)
 
 
 @app.route("/api/courses/<int:user_id>/<course_id>/unenroll/", methods=["GET"])
@@ -98,7 +98,7 @@ def unenroll(user_id, course_id):
         return failure_response("Student is not enrolled in this course!")
     course.students.remove(user)
     db.session.commit()
-    return success_response(user.serialize(), 201)
+    return success_response(user.serialize(), 200)
 
 
 

@@ -66,7 +66,6 @@ class User(db.Model):
             "id": self.user_id,
             "name": self.name,
             "netid": self.netid,
-            "is_ta": self.is_ta,
             "student_courses": [c.simple_serialize() for c in self.student_courses],
             "ta_courses": [t.simple_serialize() for t in self.ta_courses],
             "office_hours": [o.simple_serialize() for o in self.office_hours],

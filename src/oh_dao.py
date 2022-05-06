@@ -46,7 +46,7 @@ def get_oh_filtered(day = None, start_time = None, end_time = None,location = No
         user = User.query.filter(User.name == ta_name).first()
         filtered = filtered.filter(OfficeHours.ta == user)
     if ta_id is not None:
-        user = User.query.filter(User.id == ta_id).first()
+        user = User.query.filter(User.user_id == ta_id).first()
         filtered = filtered.filter(OfficeHours.ta == user)
     return filtered.all()
 

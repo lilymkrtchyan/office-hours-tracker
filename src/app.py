@@ -70,6 +70,7 @@ def enroll_in_course(user_id, course_id):
     """
     Endpoint for enrolling a user into a course by user id and course id
     """
+
     course = Course.query.filter_by(course_id = course_id).first()
     if course is None:
         return failure_response("Course not found!")

@@ -162,8 +162,17 @@ def get_all_office_hours_filter():
 @app.route("/api/officehours/create/<int:course_id>/<int:ta_id>/",methods = ["POST"])
 def create_officehour(course_id,ta_id):
     """
-    Endpoint for creating office hour
+    Endpoint for creating office hour after verifying session token
     """
+    was_successful, session_token = extract_token(request)
+
+    if not was_successful:
+        return session_token
+
+    user = users_dao.get_user_by_session_token(session_token)
+    if not user or not user.verify_session_token(session_token):
+        return failure_response("Invalid session token")
+
     body = json.loads(request.data)
     day = body.get("day")
     start_time = body.get("start_time")
@@ -173,6 +182,7 @@ def create_officehour(course_id,ta_id):
     if day is None or start_time is None or end_time is None or location is None:
         return failure_response("Office Hour info not found!")
     ta = users_dao.get_user_by_id(ta_id)
+     
     course = oh_dao.get_course_by_id(course_id)
     if course is None:
         return failure_response("Course not found!")
@@ -186,8 +196,17 @@ def create_officehour(course_id,ta_id):
 @app.route("/api/officehours/<int:office_hour_id>/",methods = ["POST"])
 def update_officehour(office_hour_id):
     """
-    Endpoint for updating office hour by id
+    Endpoint for updating office hour by id after verifying session
     """
+    was_successful, session_token = extract_token(request)
+
+    if not was_successful:
+        return session_token
+
+    user = users_dao.get_user_by_session_token(session_token)
+    if not user or not user.verify_session_token(session_token):
+        return failure_response("Invalid session token")
+
     oh = oh_dao.get_oh_by_id(office_hour_id)
     if oh is None:
         return failure_response("Office hour not found!")
@@ -211,8 +230,17 @@ def update_officehour(office_hour_id):
 @app.route("/api/officehours/<int:office_hour_id>/",methods = ["DELETE"])
 def delete_officehour(office_hour_id):
     """
-    Endpoint for deleting office hour by id
+    Endpoint for deleting office hour by id after verifying session
     """
+    was_successful, session_token = extract_token(request)
+
+    if not was_successful:
+        return session_token
+
+    user = users_dao.get_user_by_session_token(session_token)
+    if not user or not user.verify_session_token(session_token):
+        return failure_response("Invalid session token")
+
     oh = oh_dao.get_oh_by_id(office_hour_id)
     if oh is None:
         return failure_response("Office hour not found!")
@@ -242,6 +270,15 @@ def attend_officehour(office_hour_id):
     Endpoint for selecting an office hour for a user to attend. 
     Increment the office hour's attendance by 1.
     """
+    was_successful, session_token = extract_token(request)
+
+    if not was_successful:
+        return session_token
+
+    user = users_dao.get_user_by_session_token(session_token)
+    if not user or not user.verify_session_token(session_token):
+        return failure_response("Invalid session token")
+
     oh = oh_dao.get_oh_by_id(office_hour_id)
     if oh is None:
         return failure_response("Office hour not found!")
@@ -257,6 +294,15 @@ def remove_attendance(office_hour_id):
     Endpoint for removing a user's attendance from an office hour.
     Decrement the office hour's attendance by 1.
     """
+    was_successful, session_token = extract_token(request)
+
+    if not was_successful:
+        return session_token
+
+    user = users_dao.get_user_by_session_token(session_token)
+    if not user or not user.verify_session_token(session_token):
+        return failure_response("Invalid session token")
+
     oh = oh_dao.get_oh_by_id(office_hour_id)
     if oh is None:
         return failure_response("Office hour not found!")
@@ -275,9 +321,9 @@ def extract_token(request):
     Helper function that extracts the token from the header of a request
     """
     auth_header = request.headers.get("Authorization")  
-
+    
     if auth_header is None:
-        return False, json.dumps({"Missing authorization header"})
+        return False, json.dumps("Missing authorization header")
 
     #gets token
     bearer_token = auth_header.replace("Bearer", "").strip()
@@ -379,16 +425,13 @@ def logout():
         "message": "You have successfully logged out!"
     })
 
-@app.route("/api/users/")
+@app.route("/api/users/", methods=["GET"])
 def get_all_users():
     """
     Endpoint for getting all users
     """
     users = users_dao.get_all_users()
     return success_response({"users":[u.serialize() for u in users]})
-
-#-----USER ROUTES----------------------------------------------------------------------------
-
 
 
 if __name__ == "__main__":
